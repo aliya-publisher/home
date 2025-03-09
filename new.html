@@ -54,8 +54,39 @@
       background-color: #8b4513;
     }
 
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .arrow-button {
+      background-color: saddlebrown;
+      color: white;
+      border-radius: 50%;
+      border: none;
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .arrow-button:hover {
+      background-color: #8b4513;
+    }
+
+    .arrow-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .page-number {
+      font-size: 18px;
+    }
+
     #cover-modal {
-      display: none;
+      display: none; /* Hidden by default */
       position: fixed;
       top: 50%;
       left: 50%;
@@ -63,90 +94,154 @@
       background-color: white;
       padding: 20px;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
 
     #cover-preview {
-      max-width: 200px;
+      max-width: 200px; 
       max-height: 300px;
+      display: none; /* Hidden by default */
     }
-    
+
     #file-input {
-        display:none
-}
-</style>
+      display: none; /* Hidden file input */
+    }
+
+    #save-with-cover {
+      display: none; /* Hidden by default */
+      margin-top: 15px; 
+      background-color: saddlebrown;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #save-with-cover:hover {
+      background-color: #8b4513;
+    }
+  </style>
 </head>
 <body>
 
 <h1>Create New Book</h1>
 
 <div class="form-container">
-  <form id="book-form" onsubmit="event.preventDefault(); showCoverModal();">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" required>
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" required>
 
-    <textarea id="content" name="content" rows="10" required></textarea>
+  <div id="pages-container">
+    <!-- Pages will be dynamically added here -->
+    <textarea id="page-1" class="page" rows="10" data-page-number="1"></textarea>
+  </div>
 
-    <button type="submit">Save Book</button>
-  </form>
+  <div class="pagination">
+    <button id="prev-page" class="arrow-button" onclick="changePage(-1)">&lt;</button>
+    <span class="page-number" id="current-page-label">Page 1</span>
+    <button id="next-page" class="arrow-button" onclick="changePage(1)">&gt;</button>
+  </div>
+
+  <button type="submit" onclick="showCoverModal()">Save Book</button>
 </div>
 
 <!-- Cover Photo Modal -->
 <div id="cover-modal">
   <h3>Add A Cover Photo</h3>
+  
+  <!-- Cover Preview -->
   <img id="cover-preview" alt="Cover preview">
-  <div>
+
+  <!-- Modal Buttons -->
+  <div class="modal-buttons">
     <button onclick="document.getElementById('file-input').click()">Choose From Files</button>
-    <button onclick="submitForm(false)">No Thanks</button>
+    <button id="no-thanks" onclick="submitForm(false)">No Thanks</button>
+    <button id="save-with-cover" onclick="submitForm(true)">Save Book</button>
     <input type="file" id="file-input" accept="image/*">
   </div>
 </div>
 
 <script>
+let currentPage = 1;
+let totalPages = 1;
+
+function updatePageVisibility() {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach((page) => {
+    const pageNumber = parseInt(page.dataset.pageNumber);
+    page.style.display = pageNumber === currentPage ? 'block' : 'none';
+  });
+
+  document.getElementById('current-page-label').textContent = `Page ${currentPage}`;
+  document.getElementById('prev-page').disabled = currentPage === 1;
+  document.getElementById('next-page').disabled = currentPage === totalPages;
+}
+
+function addNewPage() {
+  totalPages++;
+  const newPage = document.createElement('textarea');
+  newPage.id = `page-${totalPages}`;
+  newPage.className = 'page';
+  newPage.rows = 10;
+  newPage.dataset.pageNumber = totalPages;
+  newPage.style.display = 'none';
+  document.getElementById('pages-container').appendChild(newPage);
+}
+
+function changePage(direction) {
+  currentPage += direction;
+  if (currentPage > totalPages) {
+    addNewPage();
+  }
+  updatePageVisibility();
+}
+
 function showCoverModal() {
   document.getElementById('cover-modal').style.display = 'block';
 }
 
 function submitForm(withCover) {
   const title = document.getElementById('title').value.trim();
-  const content = document.getElementById('content').value.trim();
+  const pages = {};
+  document.querySelectorAll('.page').forEach((page, index) => {
+    pages[index + 1] = page.value.trim();
+  });
   
   const fileInput = document.getElementById('file-input');
   
   let coverUrl = 'placeholder.jpg'; // Default cover
   if (withCover && fileInput.files[0]) {
     const reader = new FileReader();
-    
     reader.onload = function(event) {
       coverUrl = event.target.result; // Base64 image data
-      saveBook(title, content, coverUrl);
+      saveBook(title, pages, coverUrl);
     };
-    
     reader.readAsDataURL(fileInput.files[0]); // Convert to Base64
   } else {
-    saveBook(title, content, coverUrl);
+    saveBook(title, pages, coverUrl);
   }
 }
 
-function saveBook(title, content, coverUrl) {
+function saveBook(title, pages, coverUrl) {
   const books = JSON.parse(localStorage.getItem('books')) || [];
-  
-  books.push({ title, content, coverUrl });
-
+  books.push({ title, pages, coverUrl });
   localStorage.setItem('books', JSON.stringify(books));
-
   window.location.href = 'index.html';
 }
 
 document.getElementById('file-input').addEventListener('change', function(e) {
   const reader = new FileReader();
-  
   reader.onload = function() {
-    document.getElementById('cover-preview').src = reader.result; // Preview selected image
-    document.getElementById('cover-preview').style.display = 'block';
+    const preview = document.getElementById('cover-preview');
+    preview.src = reader.result;
+    preview.style.display = 'block';
+    document.getElementById('save-with-cover').style.display = 'block';
   };
-  
   reader.readAsDataURL(e.target.files[0]);
 });
+
+// Initialize page visibility
+updatePageVisibility();
 </script>
 
 </body>

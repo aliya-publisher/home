@@ -76,6 +76,7 @@
       align-items: center;
       font-size: 36px;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .circle-button:hover {
@@ -95,6 +96,7 @@
       align-items: center;
       font-size: 28px;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .circle-left:hover, .circle-right:hover {
@@ -204,6 +206,12 @@
       padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .book-card:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease-in-out;
     }
 
     .book-cover {
@@ -278,19 +286,26 @@
     const booksContainer = document.getElementById('books-container');
     const books = JSON.parse(localStorage.getItem('books')) || [];
 
-    booksContainer.innerHTML = '';
+    booksContainer.innerHTML = ''; // Clear existing content
 
-    books.forEach(book => {
+    books.forEach((book, index) => {
       const bookCard = document.createElement('div');
       bookCard.className = 'book-card';
+      bookCard.onclick = () => {
+        localStorage.setItem('currentBook', JSON.stringify(book));
+        window.location.href = `read.html?index=${index}`;
+      };
+
       bookCard.innerHTML = `
         <h4>${book.title}</h4>
         <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
       `;
+      
       booksContainer.appendChild(bookCard);
     });
   }
 
+  // Call displayBooks when the page loads
   window.onload = displayBooks;
 </script>
 

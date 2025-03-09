@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create New Book</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -20,16 +17,6 @@
       color: saddlebrown;
       margin-top: 20px;
       font-size: 48px;
-      width: 100%;
-      background-color: lightpink;
-      font-family: 'Pacifico', cursive; /* Playful font */
-    }
-
-    hr {
-      border: none;
-      border-top: 2px solid brown;
-      width: 100%;
-      margin-top: 20px;
     }
 
     .form-container {
@@ -76,33 +63,11 @@
       background-color: white;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      z-index: 1000;
-    }
-
-    .modal-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .modal-button {
-      padding: 10px 20px;
-      background-color: saddlebrown;
-      color: white;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .modal-button:hover {
-      background-color: #8b4513;
     }
 
     #cover-preview {
       max-width: 200px;
       max-height: 300px;
-      margin-top: 15px;
     }
     
     #file-input {
@@ -113,21 +78,13 @@
 <body>
 
 <h1>Create New Book</h1>
-<hr>
 
 <div class="form-container">
   <form id="book-form" onsubmit="event.preventDefault(); showCoverModal();">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required>
 
-    <div id="page-container">
-      <textarea id="page-1" name="page-1" rows="10" required></textarea>
-      <div id="pagination">
-        <button id="prev-page" disabled>&lt;</button>
-        <span id="current-page">Page 1</span>
-        <button id="next-page">></button>
-      </div>
-    </div>
+    <textarea id="content" name="content" rows="10" required></textarea>
 
     <button type="submit">Save Book</button>
   </form>
@@ -136,109 +93,60 @@
 <!-- Cover Photo Modal -->
 <div id="cover-modal">
   <h3>Add A Cover Photo</h3>
-  <img id="cover-preview" alt="Cover preview" style="display: none;">
-  <div class="modal-buttons">
-    <button class="modal-button" onclick="document.getElementById('file-input').click()">
-      Choose From Files
-    </button>
-    <button class="modal-button" onclick="submitForm(false)">No Thanks</button>
+  <img id="cover-preview" alt="Cover preview">
+  <div>
+    <button onclick="document.getElementById('file-input').click()">Choose From Files</button>
+    <button onclick="submitForm(false)">No Thanks</button>
+    <input type="file" id="file-input" accept="image/*">
   </div>
-  <button id="save-with-cover" class="modal-button" style="display: none; margin-top: 10px;" onclick="submitForm(true)">Save Book</button>
-  <input type="file" id="file-input" accept="image/*">
 </div>
 
 <script>
-  let currentPage = 1;
-  let maxPages = 1;
-  let pages = {};
+function showCoverModal() {
+  document.getElementById('cover-modal').style.display = 'block';
+}
 
-  document.getElementById('next-page').addEventListener('click', function() {
-    if (currentPage < maxPages) {
-      currentPage++;
-      updatePage();
-    } else {
-      addNewPage();
-    }
-  });
-
-  document.getElementById('prev-page').addEventListener('click', function() {
-    if (currentPage > 1) {
-      currentPage--;
-      updatePage();
-    }
-  });
-
-  function addNewPage() {
-    maxPages++;
-    pages[maxPages] = '';
-    updatePage();
-  }
-
-  function updatePage() {
-    document.getElementById('current-page').textContent = `Page ${currentPage}`;
-    document.getElementById('prev-page').disabled = currentPage === 1;
-    document.getElementById('next-page').disabled = false;
-
-    // Update the textarea content
-    const pageId = `page-${currentPage}`;
-    let textarea = document.getElementById(pageId);
-
-    if (!textarea) {
-      textarea = document.createElement('textarea');
-      textarea.id = pageId;
-      textarea.name = pageId;
-      textarea.rows = 10;
-      document.getElementById('page-container').appendChild(textarea);
-    }
-
-    textarea.value = pages[currentPage] || '';
-    textarea.focus();
-  }
-
-  function showCoverModal() {
-    document.getElementById('cover-modal').style.display = 'block';
-  }
-
-  function submitForm(withCover) {
-    const title = document.getElementById('title').value;
-    const fileInput = document.getElementById('file-input');
-    
-    let coverUrl = 'placeholder.jpg'; // Default cover
-    if(withCover && fileInput.files[0]) {
-      coverUrl = URL.createObjectURL(fileInput.files[0]);
-    }
-
-    for (let i = 1; i <= maxPages; i++) {
-      const pageId = `page-${i}`;
-      pages[i] = document.getElementById(pageId).value;
-    }
-
-    // Get existing books or initialize empty array
-    let books = JSON.parse(localStorage.getItem('books')) || [];
-
-    // Add new book
-    books.push({ title, content: pages, coverUrl });
-
-    // Save updated books array
-    localStorage.setItem('books', JSON.stringify(books));
-
-    // Redirect to home page
-    window.location.href = 'index.html';
-  }
-
-  // Handle file selection preview
-  document.getElementById('file-input').addEventListener('change', function(e) {
+function submitForm(withCover) {
+  const title = document.getElementById('title').value.trim();
+  const content = document.getElementById('content').value.trim();
+  
+  const fileInput = document.getElementById('file-input');
+  
+  let coverUrl = 'placeholder.jpg'; // Default cover
+  if (withCover && fileInput.files[0]) {
     const reader = new FileReader();
-    reader.onload = function() {
-      const preview = document.getElementById('cover-preview');
-      preview.src = reader.result;
-      preview.style.display = 'block';
-      document.getElementById('save-with-cover').style.display = 'block';
-    }
-    reader.readAsDataURL(e.target.files[0]);
-  });
+    
+    reader.onload = function(event) {
+      coverUrl = event.target.result; // Base64 image data
+      saveBook(title, content, coverUrl);
+    };
+    
+    reader.readAsDataURL(fileInput.files[0]); // Convert to Base64
+  } else {
+    saveBook(title, content, coverUrl);
+  }
+}
 
-  updatePage();
+function saveBook(title, content, coverUrl) {
+  const books = JSON.parse(localStorage.getItem('books')) || [];
+  
+  books.push({ title, content, coverUrl });
+
+  localStorage.setItem('books', JSON.stringify(books));
+
+  window.location.href = 'index.html';
+}
+
+document.getElementById('file-input').addEventListener('change', function(e) {
+  const reader = new FileReader();
+  
+  reader.onload = function() {
+    document.getElementById('cover-preview').src = reader.result; // Preview selected image
+    document.getElementById('cover-preview').style.display = 'block';
+  };
+  
+  reader.readAsDataURL(e.target.files[0]);
+});
 </script>
 
 </body>

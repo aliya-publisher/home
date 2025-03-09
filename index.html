@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Liah's Place</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -20,9 +17,6 @@
       color: saddlebrown;
       margin-top: 20px;
       font-size: 48px;
-      width: 100%;
-      background-color: lightpink;
-      font-family: 'Pacifico', cursive;
     }
 
     hr {
@@ -34,17 +28,17 @@
 
     .books-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(200px, auto));
       gap: 2rem;
       padding: 2rem;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: auto;
     }
 
     .book-card {
       position: relative;
       text-align: center;
-      background: white;
+      background-color: white;
       padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -60,7 +54,6 @@
       width: 200px;
       height: 300px;
       object-fit: cover;
-      margin-top: 1rem;
     }
 
     .delete-btn {
@@ -75,23 +68,24 @@
       height: 24px;
       font-size: 16px;
       cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      opacity: 0; /* Hidden by default */
+      transition: opacity 0.3s ease-in-out; /* Smooth fade-in/out effect */
     }
 
     .book-card:hover .delete-btn {
-      opacity: 1;
+      opacity: 1; /* Show delete button on hover */
     }
 
     .fadeOut {
-      opacity: 0;
-      transform: scale(0.8);
+      opacity: 0; /* Fade out effect */
+      transform: scale(0.8); /* Shrink effect */
     }
-    
-    .circle-button {
+
+    .circle-button,
+    .circle-left,
+    .circle-right {
       position: fixed;
       bottom: 20px;
-      left: calc(50% - 40px);
       width: 80px;
       height: 80px;
       background-color: saddlebrown;
@@ -104,21 +98,39 @@
       text-decoration: none;
     }
 
-    .circle-button:hover {
+    .circle-button {
+      left: calc(50% - 40px);
+    }
+
+    .circle-left {
+      left: calc(50% - 120px);
+    }
+
+    .circle-right {
+      left: calc(50% + 60px);
+    }
+
+    .circle-button:hover,
+    .circle-left:hover,
+    .circle-right:hover {
       background-color: #8b4513;
     }
-  </style>
+
+    .sidebar {
+        position-fixed
+}
+</style>
 </head>
 <body>
 
 <h1>Liah's Place</h1>
-<hr>
 
 <div class="books-grid" id="books-container">
-  <!-- Books will be dynamically added here -->
 </div>
 
 <a href="new.html" class="circle-button">+</a>
+<a href="mypublished.html" class="circle-left" title="View My Published">✍️</a>
+<a href="others.html" class="circle-right" title="View Others Published">📝</a>
 
 <script>
 function displayBooks() {
@@ -130,42 +142,47 @@ function displayBooks() {
   books.forEach((book, index) => {
     const bookCard = document.createElement('div');
     bookCard.className = 'book-card';
-    bookCard.onclick = (e) => {
-      if (!e.target.classList.contains('delete-btn')) {
-        localStorage.setItem('currentBook', JSON.stringify(book));
-        window.location.href = `read.html?index=${index}`;
-      }
-    };
-
-    bookCard.innerHTML = `
-      <button class="delete-btn" onclick="deleteBook(event, ${index})">×</button>
-      <h4>${book.title}</h4>
-      <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
-    `;
     
-    booksContainer.appendChild(bookCard);
-  });
+    // Handle book click to open it in read.html
+    bookCard.onclick = (e) => {
+        // Prevent click if delete button is clicked
+        if (!e.target.classList.contains('delete-btn')) {
+            localStorage.setItem('currentBook', JSON.stringify(book));
+            window.location.href = `read.html?index=${index}`;
+        }
+     };
+
+     // Add book card content
+     bookCard.innerHTML = `
+       <button class="delete-btn" onclick="deleteBook(event, ${index})">×</button>
+       <h4>${book.title}</h4>
+       <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
+     `;
+
+     booksContainer.appendChild(bookCard);
+   });
 }
 
 function deleteBook(event, index) {
-  event.stopPropagation(); // Prevent triggering the book click event
-  const books = JSON.parse(localStorage.getItem('books')) || [];
-  const bookTitle = books[index]?.title || 'this book';
-  
-  if (confirm(`WARNING\nYOU ARE ABOUT TO DELETE YOUR BOOK "${bookTitle}"\nARE YOU SURE YOU WANT TO CONTINUE?`)) {
-    const bookCard = document.querySelectorAll('.book-card')[index];
-    bookCard.classList.add('fadeOut');
-    
-    setTimeout(() => {
-      books.splice(index, 1);
-      localStorage.setItem('books', JSON.stringify(books));
-      displayBooks();
-    }, 300);
-  }
+   event.stopPropagation(); // Prevent triggering the book click event
+   const books = JSON.parse(localStorage.getItem('books')) || [];
+   const bookTitle = books[index]?.title || 'this book';
+
+   if (confirm(`WARNING\nYOU ARE ABOUT TO DELETE YOUR BOOK "${bookTitle}"\nARE YOU SURE YOU WANT TO CONTINUE?`)) {
+       const bookCard = document.querySelectorAll('.book-card')[index];
+       bookCard.classList.add('fadeOut'); // Add fade-out animation
+
+       setTimeout(() => {
+           books.splice(index, 1); // Remove the book from the array
+           localStorage.setItem('books', JSON.stringify(books)); // Save updated array
+           displayBooks(); // Refresh the display
+       }, 300); // Wait for animation to complete
+   }
 }
 
 // Call displayBooks when the page loads
 window.onload = displayBooks;
+
 </script>
 
 </body>

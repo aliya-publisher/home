@@ -60,6 +60,7 @@
     .circle-button {
       position: fixed;
       bottom: 20px; /* Position at the bottom of the screen */
+      left: calc(50% - 40px); /* Center horizontally (button width is 80px) */
       width: 80px; /* Bigger size for center button */
       height: 80px;
       background-color: saddlebrown;
@@ -78,7 +79,7 @@
 
     .circle-left, .circle-right {
       position: fixed;
-      bottom: 30px; /* Slightly higher than the center button */
+      bottom: 30px; /* Align with the center button */
       width: 60px; /* Smaller size for side buttons */
       height: 60px;
       background-color: saddlebrown;
@@ -100,7 +101,7 @@
     }
 
     .circle-right {
-      right: calc(50% - 120px); /* Position to the right of center button */
+      left: calc(50% + 80px); /* Position to the right of center button */
     }
 
     .circle-left::after, .circle-right::after {
@@ -115,12 +116,39 @@
       border-radius: 5px;
       font-size: 14px;
       white-space: nowrap; /* Prevent wrapping of text */
-      display:none
-}
+      display: none;
+    }
 
-.circle-left:hover::after,
-.circle-right:hover::after{
-display:block;}
+    .circle-left:hover::after, .circle-right:hover::after {
+      display: block;
+    }
+
+    .sidebar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      font-size: 30px;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+
+    .sidebar a:hover::after {
+      content: attr(title);
+      background-color: brown;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      position: absolute;
+      left: calc(100% + 10px);
+    }
+    
+    .sidebar a:hover {
+        cursor:pointer
+}
 </style>
 </head>
 <body>
@@ -148,6 +176,12 @@ display:block;}
   }
 </script>
 
+<div class="sidebar">
+  <a href="index.html" title="Home">🏠</a>
+  <a href="acc.html" title="View Account">👤</a>
+  <a href="fav.html" title="View Favorite Publishes">⭐</a>
+</div>
+
 <h1>Liah's Place</h1>
 <hr>
 
@@ -155,7 +189,10 @@ display:block;}
 <a href="new.html" class="circle-button">+</a>
 
 <!-- Left Button -->
-<a href="others.html" class="circle-left" title="View Others Published">📝</a>
+<a href="mypublished.html" class="circle-left" title="View My Published">✍️</a>
 
 <!-- Right Button -->
-<a href="mypublished.html" class="circle-right" title="View My Publ
+<a href="others.html" class="circle-right" title="View Others Published">📝</a>
+
+</body>
+</html>

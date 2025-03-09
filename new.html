@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: lightpink;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: saddlebrown;
+      margin-top: 20px;
+      font-size: 48px;
+      width: 100%;
+      background-color: lightpink;
+      font-family: 'Pacifico', cursive;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid brown;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .form-container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button[type="submit"] {
+      background-color: saddlebrown;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #8b4513;
+    }
+
+    #cover-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      background-color: saddlebrown;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .modal-button:hover {
+      background-color: #8b4513;
+    }
+
+    #cover-preview {
+      max-width: 200px;
+      max-height: 300px;
+      margin-top: 15px;
+    }
+    
+    #file-input {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Create New Book</h1>
+<hr>
+
+<div class="form-container">
+  <form id="book-form" onsubmit="event.preventDefault(); showCoverModal();">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" rows="10" required></textarea>
+
+    <button type="submit">Save Book</button>
+  </form>
+</div>
+
+<!-- Cover Photo Modal -->
+<div id="cover-modal">
+  <h3>Add A Cover Photo</h3>
+  <img id="cover-preview" alt="Cover preview">
+  <div class="modal-buttons">
+    <button class="modal-button" onclick="document.getElementById('file-input').click()">
+      Choose From Files
+    </button>
+    <button class="modal-button" onclick="submitForm()">No Thanks</button>
+  </div>
+  <input type="file" id="file-input" accept="image/*">
+</div>
+
+<script>
+  function showCoverModal() {
+    document.getElementById('cover-modal').style.display = 'block';
+  }
+
+  function submitForm() {
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+    const fileInput = document.getElementById('file-input');
+    
+    let coverUrl = 'placeholder.jpg'; // Default cover
+    if(fileInput.files[0]) {
+      coverUrl = URL.createObjectURL(fileInput.files[0]);
+    }
+
+    // Get existing books or initialize empty array
+    let books = JSON.parse(localStorage.getItem('books')) || [];
+
+    // Add new book
+    books.push({ title, content, coverUrl });
+
+    // Save updated books array
+    localStorage.setItem('books', JSON.stringify(books));
+
+    // Redirect to home page
+    window.location.href = 'index.html';
+  }
+
+  // Handle file selection preview
+  document.getElementById('file-input').addEventListener('change', function(e) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      const preview = document.getElementById('cover-preview');
+      preview.src = reader.result;
+      preview.style.display = 'block';
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  });
+</script>
+
+</body>
+</html>

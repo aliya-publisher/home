@@ -19,6 +19,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      z-index: -1; /* Ensure dots stay behind content */
     }
 
     .dot {
@@ -33,6 +34,7 @@
       position: absolute;
       font-size: 40px;
       animation: fadeInOut 3s infinite ease-in-out;
+      z-index: -1; /* Ensure kisses stay behind content */
     }
 
     @keyframes fadeInOut {
@@ -44,6 +46,7 @@
       text-align: center;
       color: saddlebrown;
       margin-top: 20px;
+      font-size: 48px; /* Increased font size for a bigger header */
     }
 
     hr {

@@ -84,6 +84,7 @@
       display: flex;
       justify-content: center;
       gap: 10px;
+      margin-top: 15px;
     }
 
     .modal-button {
@@ -130,13 +131,14 @@
 <!-- Cover Photo Modal -->
 <div id="cover-modal">
   <h3>Add A Cover Photo</h3>
-  <img id="cover-preview" alt="Cover preview">
+  <img id="cover-preview" alt="Cover preview" style="display: none;">
   <div class="modal-buttons">
     <button class="modal-button" onclick="document.getElementById('file-input').click()">
       Choose From Files
     </button>
-    <button class="modal-button" onclick="submitForm()">No Thanks</button>
+    <button class="modal-button" onclick="submitForm(false)">No Thanks</button>
   </div>
+  <button id="save-with-cover" class="modal-button" style="display: none; margin-top: 10px;" onclick="submitForm(true)">Save Book</button>
   <input type="file" id="file-input" accept="image/*">
 </div>
 
@@ -145,13 +147,13 @@
     document.getElementById('cover-modal').style.display = 'block';
   }
 
-  function submitForm() {
+  function submitForm(withCover) {
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
     const fileInput = document.getElementById('file-input');
     
     let coverUrl = 'placeholder.jpg'; // Default cover
-    if(fileInput.files[0]) {
+    if(withCover && fileInput.files[0]) {
       coverUrl = URL.createObjectURL(fileInput.files[0]);
     }
 
@@ -175,6 +177,7 @@
       const preview = document.getElementById('cover-preview');
       preview.src = reader.result;
       preview.style.display = 'block';
+      document.getElementById('save-with-cover').style.display = 'block';
     }
     reader.readAsDataURL(e.target.files[0]);
   });

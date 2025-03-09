@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read Book</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: lightpink;
+      font-family: Arial, sans-serif;
+    }
+
+    .book-container {
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+    }
+
+    p {
+      white-space: pre-wrap; /* Preserve line breaks */
+    }
+    
+    .back-button {
+        display:block;margin:auto
+}
+</style>
+</head>
+<body>
+
+<div class="book-container">
+  <h1 id="book-title"></h1>
+  <img id="book-cover" alt="Book Cover">
+  <div id="book-content"></div>
+</div>
+
+<a href="index.html" class="back-button">Back to Home</a>
+
+<script>
+  // Retrieve the current book from localStorage
+  const currentBook = JSON.parse(localStorage.getItem('currentBook'));
+
+  if (currentBook) {
+    // Populate the page with the book's details
+    document.getElementById('book-title').textContent = currentBook.title || 'Untitled';
+    document.getElementById('book-cover').src = currentBook.coverUrl || 'placeholder.jpg';
+
+    const contentContainer = document.getElementById('book-content');
+    const pages = currentBook.content;
+
+    for (let i = 1; i <= Object.keys(pages).length; i++) {
+      const page = document.createElement('div');
+      page.innerHTML = `
+        <h2>Page ${i}</h2>
+        <p>${pages[i]}</p>
+        <hr>
+      `;
+      contentContainer.appendChild(page);
+    }
+  } else {
+    // If no book is found, redirect back to the home page
+    alert('No book found! Redirecting to home page.');
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>

@@ -19,7 +19,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      z-index: -1; /* Ensure dots stay behind content */
+      z-index: -1;
     }
 
     .dot {
@@ -34,7 +34,7 @@
       position: absolute;
       font-size: 40px;
       animation: fadeInOut 3s infinite ease-in-out;
-      z-index: -1; /* Ensure kisses stay behind content */
+      z-index: -1;
     }
 
     @keyframes fadeInOut {
@@ -46,22 +46,23 @@
       text-align: center;
       color: saddlebrown;
       margin-top: 20px;
-      font-size: 48px; /* Increased font size for a bigger header */
-      width: 100%; /* Ensure text spans the whole top */
-      background-color: lightpink; /* Match background color */
+      font-size: 48px;
+      width: 100%;
+      background-color: lightpink;
     }
 
     hr {
       border: none;
       border-top: 2px solid brown;
-      width: 100%; /* Extend divider across the page */
+      width: 100%;
+      margin-top: 60px;
     }
 
     .circle-button {
       position: fixed;
-      bottom: 20px; /* Position at the bottom of the screen */
-      left: calc(50% - 40px); /* Center horizontally (button width is 80px) */
-      width: 80px; /* Bigger size for center button */
+      bottom: 20px;
+      left: calc(50% - 40px);
+      width: 80px;
       height: 80px;
       background-color: saddlebrown;
       color: white;
@@ -69,18 +70,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 36px; /* Bigger font size for "+" symbol */
+      font-size: 36px;
       cursor: pointer;
     }
 
     .circle-button:hover {
-      background-color: #8b4513; /* Darker brown on hover */
+      background-color: #8b4513;
     }
 
     .circle-left, .circle-right {
       position: fixed;
-      bottom: 30px; /* Align with the center button */
-      width: 60px; /* Smaller size for side buttons */
+      bottom: 30px;
+      width: 60px;
       height: 60px;
       background-color: saddlebrown;
       color: white;
@@ -88,26 +89,26 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 28px; /* Font size for emojis */
+      font-size: 28px;
       cursor: pointer;
     }
 
     .circle-left:hover, .circle-right:hover {
-      background-color: #8b4513; /* Darker brown on hover */
+      background-color: #8b4513;
     }
 
     .circle-left {
-      left: calc(50% - 120px); /* Position to the left of center button */
+      left: calc(50% - 120px);
     }
 
     .circle-right {
-      left: calc(50% + 80px); /* Position to the right of center button */
+      left: calc(50% + 80px);
     }
 
     .circle-left::after, .circle-right::after {
       content: attr(title);
       position: absolute;
-      bottom: calc(100% + 10px); /* Position above the button */
+      bottom: calc(100% + 10px);
       left: 50%;
       transform: translateX(-50%);
       background-color: brown;
@@ -115,7 +116,7 @@
       padding: 5px;
       border-radius: 5px;
       font-size: 14px;
-      white-space: nowrap; /* Prevent wrapping of text */
+      white-space: nowrap;
       display: none;
     }
 
@@ -127,13 +128,14 @@
       position: absolute;
       top: 20px;
       left: 20px;
+      height: 50px;
     }
 
     .sidebar a {
       display: block;
-      font-size: 30px;
+      font-size: 20px;
       text-decoration: none;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     .sidebar a:hover::after {
@@ -147,16 +149,15 @@
     }
     
     .sidebar a:hover {
-        cursor:pointer
-}
-</style>
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
 <div id="polka-dots"></div>
 
 <script>
-  // Generate random polka dots
   for (let i = 0; i < 15; i++) {
     let dot = document.createElement('div');
     dot.classList.add('dot');
@@ -165,7 +166,6 @@
     document.getElementById('polka-dots').appendChild(dot);
   }
 
-  // Generate fading kisses
   for (let i = 0; i < 4; i++) {
     let kiss = document.createElement('span');
     kiss.classList.add('kiss');
@@ -185,13 +185,8 @@
 <h1>Liah's Place</h1>
 <hr>
 
-<!-- Center Bottom Button -->
 <a href="new.html" class="circle-button">+</a>
-
-<!-- Left Button -->
 <a href="mypublished.html" class="circle-left" title="View My Published">✍️</a>
-
-<!-- Right Button -->
 <a href="others.html" class="circle-right" title="View Others Published">📝</a>
 
 </body>

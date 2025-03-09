@@ -1,83 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Read Book</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      background-color: lightpink;
-      font-family: Arial, sans-serif;
-    }
-
-    .book-container {
-      max-width: 800px;
-      margin: auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 100%;
-    }
-
-    p {
-      white-space: pre-wrap; /* Preserve line breaks */
-    }
-    
-    .back-button {
-        display:block;margin:auto
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: lightpink;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .book-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .book-cover {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .next-arrow {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            color: saddlebrown;
+        }
+        .back-button {
+            background-color: saddlebrown;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1 id="book-title"></h1>
+        <div class="book-box">
+            <img id="book-cover" class="book-cover" src="" alt="Book cover">
+            <div id="book-content"></div>
+            <div class="next-arrow" onclick="nextPage()">➡️</div>
+        </div>
+        <button class="back-button" onclick="goBack()">Back to Home</button>
+    </div>
 
-<div class="book-container">
-  <h1 id="book-title"></h1>
-  <img id="book-cover" alt="Book Cover">
-  <div id="book-content"></div>
-</div>
+    <script>
+        let currentBook;
+        let currentPage = 0;
 
-<a href="index.html" class="back-button">Back to Home</a>
+        function loadBook() {
+            currentBook = JSON.parse(localStorage.getItem('currentBook'));
+            document.getElementById('book-title').textContent = currentBook.title;
+            document.getElementById('book-cover').src = currentBook.coverUrl;
+            showPage();
+        }
 
-<script>
-  // Retrieve the current book from localStorage
-  const currentBook = JSON.parse(localStorage.getItem('currentBook'));
+        function showPage() {
+            const content = currentBook.pages[currentPage + 1] || "End of book";
+            document.getElementById('book-content').textContent = content;
+            
+            // Show/hide next arrow based on whether there's a next page
+            const nextArrow = document.querySelector('.next-arrow');
+            nextArrow.style.display = currentBook.pages[currentPage + 2] ? 'flex' : 'none';
+        }
 
-  if (currentBook) {
-    // Populate the page with the book's details
-    document.getElementById('book-title').textContent = currentBook.title || 'Untitled';
-    document.getElementById('book-cover').src = currentBook.coverUrl || 'placeholder.jpg';
+        function nextPage() {
+            if (currentBook.pages[currentPage + 2]) {
+                currentPage++;
+                showPage();
+            }
+        }
 
-    const contentContainer = document.getElementById('book-content');
-    const pages = currentBook.content;
+        function goBack() {
+            window.location.href = 'index.html';
+        }
 
-    for (let i = 1; i <= Object.keys(pages).length; i++) {
-      const page = document.createElement('div');
-      page.innerHTML = `
-        <h2>Page ${i}</h2>
-        <p>${pages[i]}</p>
-        <hr>
-      `;
-      contentContainer.appendChild(page);
-    }
-  } else {
-    // If no book is found, redirect back to the home page
-    alert('No book found! Redirecting to home page.');
-    window.location.href = 'index.html';
-  }
-</script>
-
+        window.onload = loadBook;
+    </script>
 </body>
 </html>

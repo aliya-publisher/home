@@ -15,36 +15,6 @@
       font-family: Arial, sans-serif;
     }
 
-    #polka-dots {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .dot {
-      width: 20px;
-      height: 20px;
-      background-color: white;
-      border-radius: 50%;
-      position: absolute;
-    }
-
-    .kiss {
-      position: absolute;
-      font-size: 40px;
-      animation: fadeInOut 3s infinite ease-in-out;
-      z-index: -1;
-    }
-
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
-    }
-
     h1 {
       text-align: center;
       color: saddlebrown;
@@ -62,6 +32,62 @@
       margin-top: 60px;
     }
 
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .book-card {
+      position: relative;
+      text-align: center;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .book-card:hover {
+      transform: scale(1.05);
+    }
+
+    .book-cover {
+      width: 200px;
+      height: 300px;
+      object-fit: cover;
+      margin-top: 1rem;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      border: none;
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .book-card:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .fadeOut {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    
     .circle-button {
       position: fixed;
       bottom: 20px;
@@ -75,192 +101,15 @@
       justify-content: center;
       align-items: center;
       font-size: 36px;
-      cursor: pointer;
       text-decoration: none;
     }
 
     .circle-button:hover {
       background-color: #8b4513;
     }
-
-    .circle-left, .circle-right {
-      position: fixed;
-      bottom: 20px;
-      width: 60px;
-      height: 60px;
-      background-color: saddlebrown;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 28px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .circle-left:hover, .circle-right:hover {
-      background-color: #8b4513;
-    }
-
-    .circle-left {
-      left: calc(50% - 120px);
-    }
-
-    .circle-right {
-      left: calc(50% + 60px);
-    }
-
-    .circle-left::after, .circle-right::after {
-      content: attr(title);
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: brown;
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-      font-size: 14px;
-      white-space: nowrap;
-      display: none;
-    }
-
-    .circle-left:hover::after, .circle-right:hover::after {
-      display: block;
-    }
-
-    .sidebar {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      height: 50px;
-    }
-
-    .sidebar a {
-      display: block;
-      font-size: 20px;
-      text-decoration: none;
-      margin-bottom: 5px;
-    }
-
-    .sidebar a:hover::after {
-      content: attr(title);
-      background-color: brown;
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-      position: absolute;
-      left: calc(100% + 10px);
-    }
-    
-    .sidebar a:hover {
-      cursor: pointer;
-    }
-
-    #info-icon {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 30px;
-      cursor: pointer;
-    }
-
-    #info-box {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      display: none;
-      z-index: 1;
-    }
-
-    #close-info {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    #close-info:hover {
-      color: red;
-    }
-
-    .books-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .book-card {
-      text-align: center;
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      cursor: pointer;
-    }
-
-    .book-card:hover {
-      transform: scale(1.05);
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .book-cover {
-      width: 200px;
-      height: 300px;
-      object-fit: cover;
-      margin-top: 1rem;
-    }
   </style>
 </head>
 <body>
-
-<div id="polka-dots"></div>
-
-<script>
-  for (let i = 0; i < 15; i++) {
-    let dot = document.createElement('div');
-    dot.classList.add('dot');
-    dot.style.top = `${Math.random() * window.innerHeight}px`;
-    dot.style.left = `${Math.random() * window.innerWidth}px`;
-    document.getElementById('polka-dots').appendChild(dot);
-  }
-
-  for (let i = 0; i < 4; i++) {
-    let kiss = document.createElement('span');
-    kiss.classList.add('kiss');
-    kiss.textContent = '💋';
-    kiss.style.top = `${Math.random() * window.innerHeight}px`;
-    kiss.style.left = `${Math.random() * window.innerWidth}px`;
-    document.body.appendChild(kiss);
-  }
-</script>
-
-<div class="sidebar">
-  <a href="index.html" title="Home">🏠</a>
-  <a href="acc.html" title="View Account">👤</a>
-  <a href="fav.html" title="View Favorite Publishes">⭐</a>
-</div>
-
-<div id="info-icon" onclick="showInfo()">ℹ️</div>
-
-<div id="info-box">
-  <span id="close-info" onclick="hideInfo()">×</span>
-  <p>Welcome to Aliya's Corner!</p>
-  <p>Here, you can publish books, find other books made by other people, or just simply find your favorite author!</p>
-  <p>This site is where you can create Poems, Books, Novels, Journal Entries, and Stories!</p>
-  <p>If you have any questions, then feel free to email me! <a href="mailto:duckbydaylight@gmail.com">duckbydaylight@gmail.com</a></p>
-  <p>Have Fun Writing!</p>
-</div>
 
 <h1>Liah's Place</h1>
 <hr>
@@ -270,43 +119,53 @@
 </div>
 
 <a href="new.html" class="circle-button">+</a>
-<a href="mypublished.html" class="circle-left" title="View My Published">✍️</a>
-<a href="others.html" class="circle-right" title="View Others Published">📝</a>
 
 <script>
-  function showInfo() {
-    document.getElementById('info-box').style.display = 'block';
-  }
+function displayBooks() {
+  const booksContainer = document.getElementById('books-container');
+  const books = JSON.parse(localStorage.getItem('books')) || [];
 
-  function hideInfo() {
-    document.getElementById('info-box').style.display = 'none';
-  }
+  booksContainer.innerHTML = '';
 
-  function displayBooks() {
-    const booksContainer = document.getElementById('books-container');
-    const books = JSON.parse(localStorage.getItem('books')) || [];
-
-    booksContainer.innerHTML = ''; // Clear existing content
-
-    books.forEach((book, index) => {
-      const bookCard = document.createElement('div');
-      bookCard.className = 'book-card';
-      bookCard.onclick = () => {
+  books.forEach((book, index) => {
+    const bookCard = document.createElement('div');
+    bookCard.className = 'book-card';
+    bookCard.onclick = (e) => {
+      if (!e.target.classList.contains('delete-btn')) {
         localStorage.setItem('currentBook', JSON.stringify(book));
         window.location.href = `read.html?index=${index}`;
-      };
+      }
+    };
 
-      bookCard.innerHTML = `
-        <h4>${book.title}</h4>
-        <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
-      `;
-      
-      booksContainer.appendChild(bookCard);
-    });
+    bookCard.innerHTML = `
+      <button class="delete-btn" onclick="deleteBook(event, ${index})">×</button>
+      <h4>${book.title}</h4>
+      <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
+    `;
+    
+    booksContainer.appendChild(bookCard);
+  });
+}
+
+function deleteBook(event, index) {
+  event.stopPropagation(); // Prevent triggering the book click event
+  const books = JSON.parse(localStorage.getItem('books')) || [];
+  const bookTitle = books[index]?.title || 'this book';
+  
+  if (confirm(`WARNING\nYOU ARE ABOUT TO DELETE YOUR BOOK "${bookTitle}"\nARE YOU SURE YOU WANT TO CONTINUE?`)) {
+    const bookCard = document.querySelectorAll('.book-card')[index];
+    bookCard.classList.add('fadeOut');
+    
+    setTimeout(() => {
+      books.splice(index, 1);
+      localStorage.setItem('books', JSON.stringify(books));
+      displayBooks();
+    }, 300);
   }
+}
 
-  // Call displayBooks when the page loads
-  window.onload = displayBooks;
+// Call displayBooks when the page loads
+window.onload = displayBooks;
 </script>
 
 </body>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liah's Place</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: lightpink;
+      font-family: Arial, sans-serif;
+    }
+
+    #polka-dots {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .kiss {
+      position: absolute;
+      font-size: 40px;
+      animation: fadeInOut 3s infinite ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    h1 {
+      text-align: center;
+      color: saddlebrown;
+      margin-top: 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid brown;
+      width: 50%;
+      margin: auto;
+    }
+
+    .button {
+      display: block;
+      width: 100px;
+      height: 40px;
+      background-color: saddlebrown;
+      color: white;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 5px;
+      margin: auto;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      font-size: 30px;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+
+    .sidebar a:hover::after {
+      content: attr(title);
+      background-color: brown;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      position: absolute;
+      left: calc(100% + 10px);
+    }
+    
+    .sidebar a:hover {
+        cursor:pointer
+}
+</style>
+</head>
+<body>
+
+<div id="polka-dots"></div>
+
+<script>
+  // Generate random polka dots
+  for (let i = 0; i < 15; i++) {
+    let dot = document.createElement('div');
+    dot.classList.add('dot');
+    dot.style.top = `${Math.random() * window.innerHeight}px`;
+    dot.style.left = `${Math.random() * window.innerWidth}px`;
+    document.getElementById('polka-dots').appendChild(dot);
+  }
+
+  // Generate fading kisses
+  for (let i = 0; i < 4; i++) {
+    let kiss = document.createElement('span');
+    kiss.classList.add('kiss');
+    kiss.textContent = '💋';
+    kiss.style.top = `${Math.random() * window.innerHeight}px`;
+    kiss.style.left = `${Math.random() * window.innerWidth}px`;
+    document.body.appendChild(kiss);
+  }
+</script>
+
+<h1>Liah's Place</h1>
+<hr>
+<a href="new.html" class="button">Make New</a>
+
+<div class="sidebar">
+  <a href="index.html" title="Home">🏠</a>
+  <a href="acc.html" title="View Account">👤</a>
+  <a href="fav.html" title="View Favorite Publishes">⭐</a>
+</div>
+
+</body>
+</html>

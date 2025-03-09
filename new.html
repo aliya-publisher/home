@@ -22,7 +22,7 @@
       font-size: 48px;
       width: 100%;
       background-color: lightpink;
-      font-family: 'Pacifico', cursive;
+      font-family: 'Pacifico', cursive; /* Playful font */
     }
 
     hr {
@@ -84,7 +84,6 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-top: 15px;
     }
 
     .modal-button {
@@ -107,9 +106,9 @@
     }
     
     #file-input {
-      display: none;
-    }
-  </style>
+        display:none
+}
+</style>
 </head>
 <body>
 
@@ -121,8 +120,14 @@
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required>
 
-    <label for="content">Content:</label>
-    <textarea id="content" name="content" rows="10" required></textarea>
+    <div id="page-container">
+      <textarea id="page-1" name="page-1" rows="10" required></textarea>
+      <div id="pagination">
+        <button id="prev-page" disabled>&lt;</button>
+        <span id="current-page">Page 1</span>
+        <button id="next-page">></button>
+      </div>
+    </div>
 
     <button type="submit">Save Book</button>
   </form>
@@ -143,13 +148,59 @@
 </div>
 
 <script>
+  let currentPage = 1;
+  let maxPages = 1;
+  let pages = {};
+
+  document.getElementById('next-page').addEventListener('click', function() {
+    if (currentPage < maxPages) {
+      currentPage++;
+      updatePage();
+    } else {
+      addNewPage();
+    }
+  });
+
+  document.getElementById('prev-page').addEventListener('click', function() {
+    if (currentPage > 1) {
+      currentPage--;
+      updatePage();
+    }
+  });
+
+  function addNewPage() {
+    maxPages++;
+    pages[maxPages] = '';
+    updatePage();
+  }
+
+  function updatePage() {
+    document.getElementById('current-page').textContent = `Page ${currentPage}`;
+    document.getElementById('prev-page').disabled = currentPage === 1;
+    document.getElementById('next-page').disabled = false;
+
+    // Update the textarea content
+    const pageId = `page-${currentPage}`;
+    let textarea = document.getElementById(pageId);
+
+    if (!textarea) {
+      textarea = document.createElement('textarea');
+      textarea.id = pageId;
+      textarea.name = pageId;
+      textarea.rows = 10;
+      document.getElementById('page-container').appendChild(textarea);
+    }
+
+    textarea.value = pages[currentPage] || '';
+    textarea.focus();
+  }
+
   function showCoverModal() {
     document.getElementById('cover-modal').style.display = 'block';
   }
 
   function submitForm(withCover) {
     const title = document.getElementById('title').value;
-    const content = document.getElementById('content').value;
     const fileInput = document.getElementById('file-input');
     
     let coverUrl = 'placeholder.jpg'; // Default cover
@@ -157,11 +208,16 @@
       coverUrl = URL.createObjectURL(fileInput.files[0]);
     }
 
+    for (let i = 1; i <= maxPages; i++) {
+      const pageId = `page-${i}`;
+      pages[i] = document.getElementById(pageId).value;
+    }
+
     // Get existing books or initialize empty array
     let books = JSON.parse(localStorage.getItem('books')) || [];
 
     // Add new book
-    books.push({ title, content, coverUrl });
+    books.push({ title, content: pages, coverUrl });
 
     // Save updated books array
     localStorage.setItem('books', JSON.stringify(books));
@@ -181,6 +237,8 @@
     }
     reader.readAsDataURL(e.target.files[0]);
   });
+
+  updatePage();
 </script>
 
 </body>

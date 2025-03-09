@@ -52,7 +52,7 @@
       font-size: 48px;
       width: 100%;
       background-color: lightpink;
-      font-family: 'Pacifico', cursive; /* Playful font */
+      font-family: 'Pacifico', cursive;
     }
 
     hr {
@@ -84,9 +84,9 @@
 
     .circle-left, .circle-right {
       position: fixed;
-      bottom: 20px; /* Align with the center button */
-      width: 60px; /* Smaller size for side buttons */
-      height: 60px; 
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
       background-color: saddlebrown;
       color: white;
       border-radius: 50%;
@@ -188,6 +188,30 @@
     #close-info:hover {
       color: red;
     }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .book-card {
+      text-align: center;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .book-cover {
+      width: 200px;
+      height: 300px;
+      object-fit: cover;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -233,8 +257,12 @@
 <h1>Liah's Place</h1>
 <hr>
 
+<div class="books-grid" id="books-container">
+  <!-- Books will be dynamically added here -->
+</div>
+
 <a href="new.html" class="circle-button">+</a>
-<a href="mypublished.html" class="circle-left" title="Genre Generator">📚</a>
+<a href="mypublished.html" class="circle-left" title="View My Published">✍️</a>
 <a href="others.html" class="circle-right" title="View Others Published">📝</a>
 
 <script>
@@ -245,6 +273,25 @@
   function hideInfo() {
     document.getElementById('info-box').style.display = 'none';
   }
+
+  function displayBooks() {
+    const booksContainer = document.getElementById('books-container');
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+
+    booksContainer.innerHTML = '';
+
+    books.forEach(book => {
+      const bookCard = document.createElement('div');
+      bookCard.className = 'book-card';
+      bookCard.innerHTML = `
+        <h4>${book.title}</h4>
+        <img src="${book.coverUrl}" alt="Book cover" class="book-cover">
+      `;
+      booksContainer.appendChild(bookCard);
+    });
+  }
+
+  window.onload = displayBooks;
 </script>
 
 </body>

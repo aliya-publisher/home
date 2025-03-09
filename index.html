@@ -55,55 +55,72 @@
       border: none;
       border-top: 2px solid brown;
       width: 100%; /* Extend divider across the page */
-      margin: 0; /* Remove margins for full width */
     }
 
-    .button {
-      display: block;
-      width: 200px; /* Increased width for a bigger button */
-      height: 60px; /* Increased height for a bigger button */
+    .circle-button {
+      position: fixed;
+      bottom: 20px; /* Position at the bottom of the screen */
+      width: 80px; /* Bigger size for center button */
+      height: 80px;
       background-color: saddlebrown;
       color: white;
-      text-align: center;
-      line-height: 60px; /* Adjusted line height for increased button size */
-      border-radius: 10px; /* Slightly larger radius for a bigger button */
-      margin: auto;
-      margin-top: 20px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px; /* Bigger font size for "+" symbol */
       cursor: pointer;
-      font-size: 24px; /* Increased font size for button text */
     }
 
-    .sidebar {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      height: 150px; /* Set height to ensure it's above main content */
+    .circle-button:hover {
+      background-color: #8b4513; /* Darker brown on hover */
     }
 
-    .sidebar a {
-      display: block;
-      font-size: 30px;
-      text-decoration: none;
-      margin-bottom: 10px;
+    .circle-left, .circle-right {
+      position: fixed;
+      bottom: 30px; /* Slightly higher than the center button */
+      width: 60px; /* Smaller size for side buttons */
+      height: 60px;
+      background-color: saddlebrown;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px; /* Font size for emojis */
+      cursor: pointer;
     }
 
-    .sidebar a:hover::after {
+    .circle-left:hover, .circle-right:hover {
+      background-color: #8b4513; /* Darker brown on hover */
+    }
+
+    .circle-left {
+      left: calc(50% - 120px); /* Position to the left of center button */
+    }
+
+    .circle-right {
+      right: calc(50% - 120px); /* Position to the right of center button */
+    }
+
+    .circle-left::after, .circle-right::after {
       content: attr(title);
+      position: absolute;
+      bottom: calc(100% + 10px); /* Position above the button */
+      left: 50%;
+      transform: translateX(-50%);
       background-color: brown;
       color: white;
       padding: 5px;
       border-radius: 5px;
-      position: absolute;
-      left: calc(100% + 10px);
-    }
-    
-    .sidebar a:hover {
-        cursor:pointer
+      font-size: 14px;
+      white-space: nowrap; /* Prevent wrapping of text */
+      display:none
 }
 
-    .main-content {
-      margin-top: 180px; /* Adjusted margin to ensure content is below sidebar */
-    }
+.circle-left:hover::after,
+.circle-right:hover::after{
+display:block;}
 </style>
 </head>
 <body>
@@ -131,17 +148,14 @@
   }
 </script>
 
-<div class="sidebar">
-  <a href="index.html" title="Home">🏠</a>
-  <a href="acc.html" title="View Account">👤</a>
-  <a href="fav.html" title="View Favorite Publishes">⭐</a>
-</div>
+<h1>Liah's Place</h1>
+<hr>
 
-<div class="main-content">
-  <h1>Liah's Place</h1>
-  <hr>
-  <a href="new.html" class="button">Make New</a>
-</div>
+<!-- Center Bottom Button -->
+<a href="new.html" class="circle-button">+</a>
 
-</body>
-</html>
+<!-- Left Button -->
+<a href="others.html" class="circle-left" title="View Others Published">📝</a>
+
+<!-- Right Button -->
+<a href="mypublished.html" class="circle-right" title="View My Publ

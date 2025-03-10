@@ -22,18 +22,17 @@
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
+            overflow: hidden;
         }
         .book-cover {
             width: 100%;
             max-height: 400px;
             object-fit: cover;
             border-radius: 10px;
-            margin-bottom: 20px;
         }
-        .next-arrow {
+        .arrows {
             position: absolute;
             bottom: 10px;
-            right: 10px;
             font-size: 24px;
             cursor: pointer;
             background-color: rgba(255, 255, 255, 0.7);
@@ -43,6 +42,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        .left-arrow {
+            left: 10px;
+        }
+        .right-arrow {
+            right: 10px;
         }
         h1 {
             color: saddlebrown;
@@ -63,36 +68,66 @@
         <h1 id="book-title"></h1>
         <div class="book-box">
             <img id="book-cover" class="book-cover" src="" alt="Book cover">
-            <div id="book-content"></div>
-            <div class="next-arrow" onclick="nextPage()">➡️</div>
+            <div id="book-content" style="display:none;"></div>
+            
+            <!-- Navigation Arrows -->
+            <div class="arrows left-arrow" onclick="previousPage()">⬅️</div>
+            <div class="arrows right-arrow" onclick="nextPage()">➡️</div>
         </div>
         <button class="back-button" onclick="goBack()">Back to Home</button>
     </div>
 
     <script>
-        let currentBook;
-        let currentPage = 0;
+        let currentBook; // Holds the current book data
+        let currentPage = -1; // -1 indicates we're on the cover page
 
         function loadBook() {
+            // Load book data from localStorage
             currentBook = JSON.parse(localStorage.getItem('currentBook'));
-            document.getElementById('book-title').textContent = currentBook.title;
-            document.getElementById('book-cover').src = currentBook.coverUrl;
-            showPage();
+
+            // Set title and cover photo
+            document.getElementById('book-title').textContent = currentBook.title; // Show title
+            document.getElementById('book-cover').src = currentBook.coverUrl; // Show cover image
+
+            updateNavigation(); // Update navigation arrows visibility
         }
 
-        function showPage() {
-            const content = currentBook.pages[currentPage + 1] || "End of book";
-            document.getElementById('book-content').textContent = content;
-            
-            // Show/hide next arrow based on whether there's a next page
-            const nextArrow = document.querySelector('.next-arrow');
-            nextArrow.style.display = currentBook.pages[currentPage + 2] ? 'flex' : 'none';
+        function updateNavigation() {
+            const leftArrow = document.querySelector('.left-arrow');
+            const rightArrow = document.querySelector('.right-arrow');
+
+            if (currentPage === -1) {
+                // On cover page
+                leftArrow.style.display = 'none'; // Hide left arrow
+                rightArrow.style.display = 'flex'; // Show right arrow
+                document.getElementById('book-content').style.display = 'none'; // Hide content
+                document.getElementById('book-cover').style.display = 'block'; // Show cover
+                document.getElementById('book-title').textContent = currentBook.title; // Show book title
+            } else {
+                // On a reading page
+                leftArrow.style.display = 'flex'; // Show left arrow
+                rightArrow.style.display =
+                    currentPage + 1 <= Object.keys(currentBook.pages).length ? 'flex' : 'none'; // Hide if last page
+
+                const content = currentBook.pages[currentPage + 1] || ''; // Get content for current page
+                document.getElementById('book-content').textContent = content; // Set content text
+                document.getElementById('book-content').style.display = 'block'; // Show content
+                document.getElementById('book-cover').style.display = 'none'; // Hide cover
+                document.getElementById('book-title').textContent = `Page ${currentPage + 1}`; // Show page number as title
+            }
         }
 
         function nextPage() {
-            if (currentBook.pages[currentPage + 2]) {
+            if (currentPage + 1 <= Object.keys(currentBook.pages).length) {
                 currentPage++;
-                showPage();
+                updateNavigation();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > -1) {
+                currentPage--;
+                updateNavigation();
             }
         }
 
@@ -100,7 +135,7 @@
             window.location.href = 'index.html';
         }
 
-        window.onload = loadBook;
+        window.onload = loadBook; // Load book when page is ready
     </script>
 </body>
 </html>
